@@ -1,7 +1,17 @@
 #include <LightBoard.h>
 
 LightBoard::LightBoard() {
+    for(int i = 0; i < 3; i++) {
+        pinMode(lightRowControlPins[i], OUTPUT);
+        pinMode(lightColumnControlPins[i], OUTPUT);
+    }
 
+    for(int i = 0; i < 3; i++) {
+        for(int j = 0; i < 8; i++) {
+            lightStates[i][j] = 0;
+        }
+    }
+    
 }
 
 // Flash LED with no delay
@@ -25,7 +35,7 @@ void LightBoard::powerLED(int row, int column) {
 void LightBoard::displayLights() {
     for(int row = 0; row < 3; row++) {
         for(int column = 0; column < 8; column++) {
-            powerLED(row, col);
+            powerLED(row, column);
             delay(0.5);
         }
     }
@@ -64,7 +74,7 @@ void LightBoard::shiftLightStates() {
 }
 
 // Light sequence when attacker wins
-void attackerWinSequence() {
+void LightBoard::attackerWinSequence() {
     int currentTime = millis();
     while(millis() - currentTime < 3000) {
         powerLED(2, 7);
@@ -77,7 +87,7 @@ void attackerWinSequence() {
 }
 
 // Light sequence when defender wins
-void defenderWinSequence() {
+void LightBoard::defenderWinSequence() {
     int currentTime = millis();
     while(millis() - currentTime < 3000) {
         powerLED(2, 0);

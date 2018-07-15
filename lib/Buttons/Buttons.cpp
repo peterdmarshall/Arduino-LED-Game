@@ -23,9 +23,12 @@ void Buttons::updateButtonStates() {
 }
 
 void Buttons::initializeInterrupts() {
-    // Initialize pin change interrupts on pins 0:7
-    PCICR |= 0b00000001;
-    PCMSK2 |= 0b0011111;
+    // Initialize pin change interrupts on pins 0:5
+    for(byte i = 0; i < 6; i++) {
+        *digitalPinToPCMSK(i) |= bit(digitalPinToPCMSKbit(i));
+        PCIFR |= bit(digitalPinToPCICRbit(i));
+        PCICR |= bit(digitalPinToPCICRbit(i));
+    }
 }
 
 int Buttons::getAttackerButton(int index) {
@@ -36,11 +39,11 @@ int Buttons::getDefenderButton(int index) {
     return defenderButtons[index];
 }
 
-int* Buttons::getAttackerButtonStates() {
+volatile int* Buttons::getAttackerButtonStates() {
     return attackerButtonStates;
 }
 
-int* Buttons::getDefenderButtonStates() {
+volatile int* Buttons::getDefenderButtonStates() {
     return defenderButtonStates;
 }
 

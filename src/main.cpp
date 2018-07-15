@@ -2,8 +2,8 @@
 #include <Buttons.h>
 #include <LightBoard.h>
 
-int defenderMissCounter = 0;
-int attackerButtonPresses = 0;
+volatile int defenderMissCounter = 0;
+volatile int attackerButtonPresses = 0;
 int gameClockCyclePeriod = 20; // In milliseconds
 
 Buttons buttons = Buttons();

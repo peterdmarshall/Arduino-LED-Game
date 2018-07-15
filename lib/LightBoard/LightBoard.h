@@ -38,7 +38,6 @@ class LightBoard {
         // Defender on side by column 7
         // Attacker on side by column 0
         int lightStates[3][8];
-        int nextLight = 0;
 
 };
 
