@@ -69,7 +69,7 @@ void LightBoard::shiftLightStates() {
 
     // Update lightStates array based on previous lightStates
     for(int row = 0; row < 3; row++) {
-        for(int col = 0; col < 8; col++) {
+        for(int col = 0; col < 7; col++) {
             if(col == 0){
                 lightStates[row][0] = 0;
             }
