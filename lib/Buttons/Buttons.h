@@ -17,13 +17,17 @@ class Buttons {
 
         int getDefenderButton(int index);
 
+        int* getAttackerButtonStates();
+
+        int* getDefenderButtonStates();
+
 
     private:
         // Attacker buttons are digital pins 0:2
-        int attackerButtons[3] = {0, 1, 2};
+        int attackerButtons[3] = {5, 4, 3};
 
         // Defender buttons are digital pins 3:5
-        int defenderButtons[3] = {3, 4, 5};
+        int defenderButtons[3] = {2, 1, 0};
 
         volatile int attackerButtonStates[3];
         volatile int defenderButtonStates[3];

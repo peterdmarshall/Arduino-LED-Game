@@ -8,26 +8,37 @@ class LightBoard {
         LightBoard();
         
         // Flash LED with no delay
-        void flashLED(int row, int column);
+        void powerLED(int row, int column);
 
-        // Iteratively turns on the lights that have state set to high 
-        void displayLights(int cycleTime);
+        // Displays next light in array
+        void displayLights();
 
         // Update the lightStates array based on button states
-        void updateLightStates(int attackerButtonStates[3]);
+        void updateLightStates(int buttonStates[3]);
 
         // Shift light states one (done every game clock cycle)
         void shiftLightStates();
 
+        // Light sequence when attacker wins
+        void attackerWinSequence();
+
+        // Light sequence when defender wins
+        void defenderWinSequence();
+
         // Getter and setter for lightStates array
         int getLightState(int row, int column);
+
+        int checkLightColumnState(int* array, int column);
 
         void setLightState(int row, int column, int state);
 
     private:
-        int lightColumnControlPins[3] = {6, 7, 8}; // 3:8 Decoder
-        int lightRowControlPins[3] = {9, 10, 11};
+        int lightColumnControlPins[3] = {8, 9, 10}; // 3:8 Decoder
+        int lightRowControlPins[3] = {11, 12, 13};
+        // Defender on side by column 7
+        // Attacker on side by column 0
         int lightStates[3][8];
+        int nextLight = 0;
 
 };
 

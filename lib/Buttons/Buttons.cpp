@@ -35,3 +35,12 @@ int Buttons::getAttackerButton(int index) {
 int Buttons::getDefenderButton(int index) {
     return defenderButtons[index];
 }
+
+int* Buttons::getAttackerButtonStates() {
+    return attackerButtonStates;
+}
+
+int* Buttons::getDefenderButtonStates() {
+    return defenderButtonStates;
+}
+

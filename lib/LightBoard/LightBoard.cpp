@@ -5,31 +5,35 @@ LightBoard::LightBoard() {
 }
 
 // Flash LED with no delay
-void LightBoard::flashLED(int row, int column) {
-    digitalWrite(lightRowControlPins[row], HIGH);
-    for(int i = 2; i >= 0; i--) {
-        digitalWrite(lightColumnControlPins[i], (column >> i));
+void LightBoard::powerLED(int row, int column) {
+    for(int i = 0; i < 3; i++) {
+        if(lightRowControlPins[i] == lightRowControlPins[row]) {
+            digitalWrite(lightRowControlPins[i], HIGH);
+        }
+        else {
+            digitalWrite(lightRowControlPins[i], LOW);
+        }
     }
+    
+    digitalWrite(lightColumnControlPins[2], (column & 4));
+    digitalWrite(lightColumnControlPins[1], (column & 2));
+    digitalWrite(lightColumnControlPins[0], (column & 1));
 }
 
 
 // Iteratively turns on the lights that have state set to high 
-void LightBoard::displayLights(int cycleTime) {
-    int startTime = millis();
-    int lightCount = 0;
-    while((millis() - startTime < cycleTime) || lightCount < 24) {
-        for(int row = 0; row < 3; row++) {
-            for(int col = 0; col < 8; col++) {
-                flashLED(row, col);
-                lightCount++;
-            }
+void LightBoard::displayLights() {
+    for(int row = 0; row < 3; row++) {
+        for(int column = 0; column < 8; column++) {
+            powerLED(row, col);
+            delay(0.5);
         }
     }
 }
 
-void LightBoard::updateLightStates(int attackerButtonStates[3]) {
+void LightBoard::updateLightStates(int buttonStates[3]) {
     for(int i = 0; i < 3; i++) {
-        if(attackerButtonStates[i]) {
+        if(buttonStates[i]) {
             // Set first light to HIGH
             setLightState(i, 1, HIGH);
         }
@@ -59,8 +63,40 @@ void LightBoard::shiftLightStates() {
     }
 }
 
-int LightBoard::getLightState(int row, int column) {
-    return lightStates[row][column];
+// Light sequence when attacker wins
+void attackerWinSequence() {
+    int currentTime = millis();
+    while(millis() - currentTime < 3000) {
+        powerLED(2, 7);
+        delay(25);
+        powerLED(1, 7);
+        delay(25);
+        powerLED(0, 7);
+        delay(25);
+    }
+}
+
+// Light sequence when defender wins
+void defenderWinSequence() {
+    int currentTime = millis();
+    while(millis() - currentTime < 3000) {
+        powerLED(2, 0);
+        delay(25);
+        powerLED(1, 0);
+        delay(25);
+        powerLED(0, 0);
+        delay(25);
+    }
+}
+
+int LightBoard::checkLightColumnState(int* arrayToCheck, int column) {
+    int numberOfMatches = 0;
+    for(int i = 0; i < 3; i++) {
+        if(arrayToCheck[i] == lightStates[i][column]) {
+            numberOfMatches++;
+        }
+    }
+    return numberOfMatches;
 }
 
 void LightBoard::setLightState(int row, int column, int state) {
