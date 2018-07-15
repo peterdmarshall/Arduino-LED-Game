@@ -38,7 +38,15 @@ void LightBoard::updateLightStates(int attackerButtonStates[3]) {
 
 // Shift light states one (done every game clock cycle)
 void LightBoard::shiftLightStates() {
-    int previousLightStates[3][8] = lightStates;
+    // Make a copy of lightStates array
+    int previousLightStates[3][8];
+    for(int row = 0; row < 3; row++) {
+        for(int col = 0; col < 8; col++) {
+            previousLightStates[row][col] = lightStates[row][col];
+        }
+    }
+
+    // Update lightStates array based on previous lightStates
     for(int row = 0; row < 3; row++) {
         for(int col = 0; col < 8; col++) {
             if(col == 0){

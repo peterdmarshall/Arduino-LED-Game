@@ -1,7 +1,6 @@
 #include <Arduino.h>
 #include <Buttons.h>
 #include <LightBoard.h>
-#include <vector.h>
 
 Buttons buttons = Buttons();
 LightBoard lightBoard = LightBoard();
