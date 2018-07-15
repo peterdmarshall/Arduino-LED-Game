@@ -1,4 +1,3 @@
-#include <arduino.h>
 #include <buttons.h>
 
 Buttons::Buttons() {
@@ -7,6 +6,8 @@ Buttons::Buttons() {
         pinMode(attackerButtons[i], INPUT);
         pinMode(defenderButtons[i], INPUT);
     }
+    // Initialize interrupts
+    initializeInterrupts();
 }
 
 void Buttons::updateButtonStates() {
@@ -22,16 +23,9 @@ void Buttons::updateButtonStates() {
 }
 
 void Buttons::initializeInterrupts() {
-    // Initialize interrupts on attacker and defender buttons
-    for(int i = 0; i < 3; i++) {
-        attachInterrupt(digitalPinToInterrupt(attackerButtons[i]), buttonInterrupt, RISING);
-        attachInterrupt(digitalPinToInterrupt(defenderButtons[i]), buttonInterrupt, RISING);
-    }
-}
-
-void Buttons::buttonInterrupt() {
-    // Update button states in button interrupt
-    updateButtonStates();
+    // Initialize pin change interrupts on pins 0:7
+    PCICR |= 0b00000001;
+    PCMSK2 |= 0b0011111;
 }
 
 int Buttons::getAttackerButton(int index) {

@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <Buttons.h>
 #include <LightBoard.h>
+#include <vector.h>
 
 Buttons buttons = Buttons();
 LightBoard lightBoard = LightBoard();
@@ -13,6 +14,10 @@ void loop() {
     // Main loop holds game logic
     lightBoard.displayLights(40); // 40ms game clock cycle
     lightBoard.shiftLightStates();
+}
+
+ISR(PCINT2_vect) {
+    buttons.updateButtonStates();
 }
 
 
