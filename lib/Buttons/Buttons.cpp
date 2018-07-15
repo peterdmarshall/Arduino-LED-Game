@@ -14,10 +14,10 @@ void Buttons::updateButtonStates() {
     for(int i = 0; i < 3; i++) {
         // digitalRead all buttons and update states if they are high
         if(digitalRead(attackerButtons[i])) {
-            attackerButtonStates[i] = attackerButtons[i];
+            attackerButtonStates[i] = digitalRead(attackerButtons[i]);
         }
         if(digitalRead(defenderButtons[i])) {
-            defenderButtonStates[i] = defenderButtons[i];
+            defenderButtonStates[i] = digitalRead(defenderButtons[i]);
         }
     }
 }
@@ -37,6 +37,13 @@ int Buttons::getAttackerButton(int index) {
 
 int Buttons::getDefenderButton(int index) {
     return defenderButtons[index];
+}
+
+void Buttons::resetButtonStates() {
+    for(int i = 0; i < 3; i++) {
+        attackerButtonStates[i] = 0;
+        defenderButtonStates[i] = 0;
+    }
 }
 
 volatile int* Buttons::getAttackerButtonStates() {

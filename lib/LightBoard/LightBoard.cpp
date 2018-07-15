@@ -5,13 +5,13 @@ LightBoard::LightBoard() {
         pinMode(lightRowControlPins[i], OUTPUT);
         pinMode(lightColumnControlPins[i], OUTPUT);
     }
-
+/*
     for(int i = 0; i < 3; i++) {
         for(int j = 0; i < 8; i++) {
             lightStates[i][j] = 0;
         }
     }
-    
+*/
 }
 
 // Flash LED with no delay
@@ -24,10 +24,15 @@ void LightBoard::powerLED(int row, int column) {
             digitalWrite(lightRowControlPins[i], LOW);
         }
     }
-    
-    digitalWrite(lightColumnControlPins[2], (column & 4));
+    delay(2);
+    digitalWrite(lightColumnControlPins[0], (column & 4));
     digitalWrite(lightColumnControlPins[1], (column & 2));
-    digitalWrite(lightColumnControlPins[0], (column & 1));
+    digitalWrite(lightColumnControlPins[2], (column & 1));
+
+    for(int i = 0; i < 3; i++) {
+        digitalWrite(lightRowControlPins[i], LOW);
+        digitalWrite(lightRowControlPins[i], LOW);
+    }
 }
 
 
@@ -35,8 +40,10 @@ void LightBoard::powerLED(int row, int column) {
 void LightBoard::displayLights() {
     for(int row = 0; row < 3; row++) {
         for(int column = 0; column < 8; column++) {
-            powerLED(row, column);
-            delay(0.5);
+            if(lightStates[row][column] == 1) {
+                powerLED(row, column);
+                delay(1);
+            }
         }
     }
 }
@@ -45,7 +52,7 @@ void LightBoard::updateLightStates(int buttonStates[3]) {
     for(int i = 0; i < 3; i++) {
         if(buttonStates[i]) {
             // Set first light to HIGH
-            setLightState(i, 1, HIGH);
+            setLightState(i, 0, HIGH);
         }
     }
 }
@@ -75,8 +82,7 @@ void LightBoard::shiftLightStates() {
 
 // Light sequence when attacker wins
 void LightBoard::attackerWinSequence() {
-    int currentTime = millis();
-    while(millis() - currentTime < 3000) {
+    for(int i = 0; i < 10; i++) {
         powerLED(2, 7);
         delay(25);
         powerLED(1, 7);
@@ -88,8 +94,8 @@ void LightBoard::attackerWinSequence() {
 
 // Light sequence when defender wins
 void LightBoard::defenderWinSequence() {
-    int currentTime = millis();
-    while(millis() - currentTime < 3000) {
+    
+     for(int i = 0; i < 10; i++) {
         powerLED(2, 0);
         delay(25);
         powerLED(1, 0);
@@ -97,6 +103,7 @@ void LightBoard::defenderWinSequence() {
         powerLED(0, 0);
         delay(25);
     }
+    
 }
 
 int LightBoard::checkLightColumnState(int* arrayToCheck, int column) {

@@ -17,6 +17,8 @@ class Buttons {
 
         int getDefenderButton(int index);
 
+        void resetButtonStates();
+
         volatile int* getAttackerButtonStates();
 
         volatile int* getDefenderButtonStates();

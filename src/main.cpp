@@ -4,7 +4,7 @@
 
 volatile int defenderMissCounter = 0;
 volatile int attackerButtonPresses = 0;
-int gameClockCyclePeriod = 20; // In milliseconds
+int gameClockCyclePeriod = 150; // In milliseconds
 
 Buttons buttons = Buttons();
 LightBoard lightBoard = LightBoard();
@@ -16,17 +16,15 @@ void setup() {
 void loop() {
 
     if(defenderMissCounter < 5 || attackerButtonPresses < 50) {
-        int startTime = millis();
-
-        // Display lights for the time specified by gameClockCyclePeriod
-        while(millis() - startTime < gameClockCyclePeriod) {
+        int previousTime = millis();
+        while(millis() - previousTime < gameClockCyclePeriod) {
             lightBoard.displayLights();
         }
-
+    
         // Update game state once per clock cycle
         lightBoard.shiftLightStates();
     }
-
+/*
     else if(defenderMissCounter < 5) {
         // Defender wins!
         lightBoard.defenderWinSequence();
@@ -36,7 +34,7 @@ void loop() {
         // Attacker wins!
         lightBoard.attackerWinSequence();
     }
-
+*/
 
 }
 
@@ -44,6 +42,7 @@ ISR(PCINT2_vect) {
     buttons.updateButtonStates();
     lightBoard.updateLightStates(buttons.getAttackerButtonStates());
     defenderMissCounter += lightBoard.checkLightColumnState(buttons.getDefenderButtonStates(), 7);
+    buttons.resetButtonStates();
 }
 
 

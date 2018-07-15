@@ -33,8 +33,8 @@ class LightBoard {
         void setLightState(int row, int column, int state);
 
     private:
-        int lightColumnControlPins[3] = {8, 9, 10}; // 3:8 Decoder
-        int lightRowControlPins[3] = {11, 12, 13};
+        int lightColumnControlPins[3] = {10, 9, 8}; // 3:8 Decoder
+        int lightRowControlPins[3] = {13, 12, 11};
         // Defender on side by column 7
         // Attacker on side by column 0
         int lightStates[3][8];
