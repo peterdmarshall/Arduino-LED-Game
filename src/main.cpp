@@ -18,15 +18,6 @@ void loop() {
 
     if(defenderMissCounter < 5 || attackerButtonPresses < 10) {
         int previousTime = millis();
-        while(millis() - previousTime < gameClockCyclePeriod) {
-            lightBoard.displayLights();
-            for(int i = 0; i < 3; i++) {
-                for(int j = 0; j < 8; j++) {
-                    Serial.print(lightBoard.getLightState(i, j));
-                    Serial.println();
-                }
-            }
-        }
     
         // Update game state once per clock cycle
         lightBoard.shiftLightStates();
