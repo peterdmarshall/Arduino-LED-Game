@@ -14,7 +14,7 @@ class LightBoard {
         void displayLights();
 
         // Update the lightStates array based on button states
-        void updateLightStates(int buttonStates[3]);
+        void updateLightStates(int attackerButtonStates[3], int defenderButtonStates[3]);
 
         // Shift light states one (done every game clock cycle)
         void shiftLightStates();
@@ -28,7 +28,7 @@ class LightBoard {
         // Getter and setter for lightStates array
         int getLightState(int row, int column);
 
-        int checkLightColumnState(int* array, int column);
+        int compareLightColumnState(int statesToCompare[3], int column);
 
         void setLightState(int row, int column, int state);
 

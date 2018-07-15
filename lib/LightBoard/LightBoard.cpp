@@ -48,11 +48,14 @@ void LightBoard::displayLights() {
     }
 }
 
-void LightBoard::updateLightStates(int buttonStates[3]) {
+void LightBoard::updateLightStates(int attackerButtonStates[3], int defenderButtonStates[3]) {
     for(int i = 0; i < 3; i++) {
-        if(buttonStates[i]) {
+        if(attackerButtonStates[i]) {
             // Set first light to HIGH
             setLightState(i, 0, HIGH);
+        }
+        if(defenderButtonStates[i]) {
+            setLightState(i, 7, HIGH);
         }
     }
 }
@@ -70,17 +73,23 @@ void LightBoard::shiftLightStates() {
     // Update lightStates array based on previous lightStates
     for(int row = 0; row < 3; row++) {
         for(int col = 0; col < 7; col++) {
+            // Set first column to zero on each shift
             if(col == 0){
                 lightStates[row][0] = 0;
             }
-            else {
+            // Set columns 2-7 to the value of the previous column in the previous state
+            else if(col < 7 && col > 0) {
                 lightStates[row][col] = previousLightStates[row][col - 1];
+            }
+            // Set column 8 to 0 whenever lightStates shift
+            else {
+                lightStates[row][7] = 0;
             }
         }
     }
 }
 
-// Light sequence when attacker wins
+// Light sequence played when attacker wins
 void LightBoard::attackerWinSequence() {
     for(int i = 0; i < 10; i++) {
         powerLED(2, 7);
@@ -92,7 +101,7 @@ void LightBoard::attackerWinSequence() {
     }
 }
 
-// Light sequence when defender wins
+// Light sequence played when defender wins
 void LightBoard::defenderWinSequence() {
     
      for(int i = 0; i < 10; i++) {
@@ -106,10 +115,10 @@ void LightBoard::defenderWinSequence() {
     
 }
 
-int LightBoard::checkLightColumnState(int* arrayToCheck, int column) {
+int LightBoard::compareLightColumnState(int statesToCompare[], int column) {
     int numberOfMatches = 0;
     for(int i = 0; i < 3; i++) {
-        if(arrayToCheck[i] == lightStates[i][column]) {
+        if(statesToCompare[i] == lightStates[i][column]) {
             numberOfMatches++;
         }
     }

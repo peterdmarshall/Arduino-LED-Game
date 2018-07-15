@@ -47,8 +47,8 @@ void loop() {
 
 ISR(PCINT2_vect) {
     buttons.updateButtonStates();
-    lightBoard.updateLightStates(buttons.getAttackerButtonStates());
-    defenderMissCounter += lightBoard.checkLightColumnState(buttons.getDefenderButtonStates(), 6);
+    lightBoard.updateLightStates(buttons.getAttackerButtonStates(), buttons.getDefenderButtonStates());
+    defenderMissCounter += lightBoard.compareLightColumnState(buttons.getDefenderButtonStates(), 6);
     buttons.resetButtonStates();
 }
 
