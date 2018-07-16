@@ -11,7 +11,7 @@ LightBoard lightBoard = LightBoard();
 
 void setup() {
     // Initialize the buttons and lights, as well as the interrupts on the buttons
-    Serial.begin(9600);
+    // Serial.begin(9600);
 }
 
 void loop() {
