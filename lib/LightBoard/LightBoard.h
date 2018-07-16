@@ -30,7 +30,10 @@ class LightBoard {
 
         int compareLightColumnState(int statesToCompare[3], int column);
 
-        void setLightState(int row, int column, int state);
+        void setLightState(int row, int column, int state); 
+
+        // Reset light states
+        void resetLightStates();
 
     private:
         int lightColumnControlPins[3] = {10, 9, 8}; // 3:8 Decoder

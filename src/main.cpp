@@ -2,46 +2,63 @@
 #include <Buttons.h>
 #include <LightBoard.h>
 
+
 volatile int defenderMissCounter = 0;
 volatile int attackerButtonPresses = 0;
-int gameClockCyclePeriod = 150; // In milliseconds
+int gameClockCyclePeriod = 250; // In milliseconds
+int attackerWins = 0;           // Attacker win flag
+int defenderWins = 0;           // Defender win flag
 
 Buttons buttons = Buttons();
 LightBoard lightBoard = LightBoard();
 
 void setup() {
     // Initialize the buttons and lights, as well as the interrupts on the buttons
-    // Serial.begin(9600);
 }
 
 void loop() {
 
-    if(defenderMissCounter < 5 || attackerButtonPresses < 10) {
-        int previousTime = millis();
-    
+    if(defenderMissCounter < 5 && attackerButtonPresses < 30) {
+
+        unsigned long previousTime = millis();
+        while(millis() - previousTime < gameClockCyclePeriod) {
+            lightBoard.displayLights();
+        }
+        
         // Update game state once per clock cycle
         lightBoard.shiftLightStates();
+
     }
 
-    else if(defenderMissCounter < 5) {
-        // Defender wins!
-        lightBoard.defenderWinSequence();
-    }
-
-    else if(attackerButtonPresses < 50) {
+    else if(defenderMissCounter >= 5) {
         // Attacker wins!
-        lightBoard.attackerWinSequence();
+        defenderWins = 1;
+        lightBoard.defenderWinSequence();
+        lightBoard.resetLightStates();
+        defenderMissCounter = 0;
+        attackerButtonPresses = 0;
+        defenderWins = 0;
     }
 
+    else if(attackerButtonPresses >= 30) {
+        // Defender wins!
+        attackerWins = 1;
+        lightBoard.attackerWinSequence();
+        lightBoard.resetLightStates();
+        defenderMissCounter = 0;
+        attackerButtonPresses = 0;
+        attackerWins = 0;
+    }
 
 }
 
 ISR(PCINT2_vect) {
-    buttons.updateButtonStates();
-    lightBoard.updateLightStates(buttons.getAttackerButtonStates(), buttons.getDefenderButtonStates());
-    defenderMissCounter += lightBoard.compareLightColumnState(buttons.getDefenderButtonStates(), 6);
-    buttons.resetButtonStates();
+    if(!(attackerWins || defenderWins)) {
+        buttons.updateButtonStates();
+        lightBoard.updateLightStates(buttons.getAttackerButtonStates(), buttons.getDefenderButtonStates());
+        defenderMissCounter += lightBoard.compareLightColumnState(buttons.getDefenderButtonStates(), 6);
+        buttons.resetButtonStates();
+    }
 }
-
 
 

@@ -24,13 +24,14 @@ void LightBoard::powerLED(int row, int column) {
             digitalWrite(lightRowControlPins[i], LOW);
         }
     }
-    delay(2);
+    
     digitalWrite(lightColumnControlPins[0], (column & 4));
     digitalWrite(lightColumnControlPins[1], (column & 2));
     digitalWrite(lightColumnControlPins[2], (column & 1));
 
+    delay(2);
+
     for(int i = 0; i < 3; i++) {
-        digitalWrite(lightRowControlPins[i], LOW);
         digitalWrite(lightRowControlPins[i], LOW);
     }
 }
@@ -72,18 +73,14 @@ void LightBoard::shiftLightStates() {
 
     // Update lightStates array based on previous lightStates
     for(int row = 0; row < 3; row++) {
-        for(int col = 0; col < 7; col++) {
+        for(int col = 0; col < 8; col++) {
             // Set first column to zero on each shift
-            if(col == 0){
-                lightStates[row][0] = 0;
+            if(col == 0 || col == 7){
+                lightStates[row][col] = 0;
             }
             // Set columns 2-7 to the value of the previous column in the previous state
             else if(col < 7 && col > 0) {
                 lightStates[row][col] = previousLightStates[row][col - 1];
-            }
-            // Set column 8 to 0 whenever lightStates shift
-            else {
-                lightStates[row][7] = 0;
             }
         }
     }
@@ -116,15 +113,23 @@ void LightBoard::defenderWinSequence() {
 }
 
 int LightBoard::compareLightColumnState(int statesToCompare[], int column) {
-    int numberOfMatches = 0;
+    int numberOfMisses = 0;
     for(int i = 0; i < 3; i++) {
-        if(statesToCompare[i] == lightStates[i][column]) {
-            numberOfMatches++;
+        if((statesToCompare[i] && !lightStates[i][column]) || (!statesToCompare[i] && lightStates[i][column])) {
+            numberOfMisses++;
         }
     }
-    return numberOfMatches;
+    return numberOfMisses;
 }
 
 void LightBoard::setLightState(int row, int column, int state) {
     lightStates[row][column] = state;
+}
+
+void LightBoard::resetLightStates() {
+    for(int row = 0; row < 3; row++) {
+        for(int col = 0; col < 8; col++) {
+            lightStates[row][col] = 0;
+        }
+    }
 }

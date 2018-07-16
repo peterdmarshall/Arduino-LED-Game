@@ -24,7 +24,7 @@ void Buttons::updateButtonStates() {
 
 void Buttons::initializeInterrupts() {
     // Initialize pin change interrupts on pins 0:5
-    for(byte i = 0; i < 6; i++) {
+    for(byte i = 2; i < 8; i++) {
         *digitalPinToPCMSK(i) |= bit(digitalPinToPCMSKbit(i));
         PCIFR |= bit(digitalPinToPCICRbit(i));
         PCICR |= bit(digitalPinToPCICRbit(i));
