@@ -19,11 +19,8 @@ class LightBoard {
         // Shift light states one (done every game clock cycle)
         void shiftLightStates();
 
-        // Light sequence when attacker wins
-        void attackerWinSequence();
-
-        // Light sequence when defender wins
-        void defenderWinSequence();
+        // Shift light states one excluding the rows specified
+        void shiftLightStates(int rowsToExclude[3]);
 
         // Getter and setter for lightStates array
         int getLightState(int row, int column);

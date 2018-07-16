@@ -5,13 +5,6 @@ LightBoard::LightBoard() {
         pinMode(lightRowControlPins[i], OUTPUT);
         pinMode(lightColumnControlPins[i], OUTPUT);
     }
-/*
-    for(int i = 0; i < 3; i++) {
-        for(int j = 0; i < 8; i++) {
-            lightStates[i][j] = 0;
-        }
-    }
-*/
 }
 
 // Flash LED with no delay
@@ -86,35 +79,43 @@ void LightBoard::shiftLightStates() {
     }
 }
 
-// Light sequence played when attacker wins
-void LightBoard::attackerWinSequence() {
-    for(int i = 0; i < 10; i++) {
-        powerLED(2, 7);
-        delay(25);
-        powerLED(1, 7);
-        delay(25);
-        powerLED(0, 7);
-        delay(25);
+// Shift light states one excluding the rows specified
+void LightBoard::shiftLightStates(int rowsToExclude[3]) {
+    // Make a copy of lightStates array
+    int previousLightStates[3][8];
+    for(int row = 0; row < 3; row++) {
+        for(int col = 0; col < 8; col++) {
+            previousLightStates[row][col] = lightStates[row][col];
+        }
+    }
+
+    // Update lightStates array based on previous lightStates
+    for(int row = 0; row < 3; row++) {
+        if(!rowsToExclude[row]) {
+            for(int col = 0; col < 8; col++) {
+                // Set first column to zero on each shift
+                if(col == 0 || col == 7){
+                    lightStates[row][col] = 0;
+                }
+                // Set columns 2-7 to the value of the previous column in the previous state
+                else if(col < 7 && col > 0) {
+                    lightStates[row][col] = previousLightStates[row][col - 1];
+                }
+            }
+        }
+        else {
+            for(int col = 0; col < 8; col++) {
+                lightStates[row][col] = previousLightStates[row][col];
+            }
+        }
     }
 }
 
-// Light sequence played when defender wins
-void LightBoard::defenderWinSequence() {
-    
-     for(int i = 0; i < 10; i++) {
-        powerLED(2, 0);
-        delay(25);
-        powerLED(1, 0);
-        delay(25);
-        powerLED(0, 0);
-        delay(25);
-    }
-    
-}
+
 
 bool LightBoard::compareLightColumnState(int statesToCompare[], int column) {
     for(int i = 0; i < 3; i++) {
-        if(statesToCompare[i] == lightStates[i][column]){
+        if(statesToCompare[i] && lightStates[i][column]){
             return true;
         }
     }
