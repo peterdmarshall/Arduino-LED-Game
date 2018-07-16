@@ -112,24 +112,48 @@ void LightBoard::defenderWinSequence() {
     
 }
 
-int LightBoard::compareLightColumnState(int statesToCompare[], int column) {
-    int numberOfMisses = 0;
+bool LightBoard::compareLightColumnState(int statesToCompare[], int column) {
     for(int i = 0; i < 3; i++) {
-        if((statesToCompare[i] && !lightStates[i][column]) || (!statesToCompare[i] && lightStates[i][column])) {
-            numberOfMisses++;
+        if(statesToCompare[i] == lightStates[i][column]){
+            return true;
         }
     }
-    return numberOfMisses;
+    return false;
+}
+
+int LightBoard::getLightState(int row, int column) {
+    return lightStates[row][column];
 }
 
 void LightBoard::setLightState(int row, int column, int state) {
     lightStates[row][column] = state;
 }
 
-void LightBoard::resetLightStates() {
+void LightBoard::resetAllLightStates() {
     for(int row = 0; row < 3; row++) {
         for(int col = 0; col < 8; col++) {
             lightStates[row][col] = 0;
         }
+    }
+}
+
+void LightBoard::resetLightRowStates(int row) {
+    for(int col = 0; col < 8; col++) {
+        lightStates[row][col] = 0;
+    }
+}
+
+// Set light states to 1
+void LightBoard::setAllLightStates() {
+    for(int row = 0; row < 3; row++) {
+        for(int col = 0; col < 8; col++) {
+            lightStates[row][col] = 1;
+        }
+    }
+}
+
+void LightBoard::setLightRowStates(int row) {
+    for(int col = 0; col < 8; col++) {
+        lightStates[row][col] = 1;
     }
 }

@@ -28,12 +28,19 @@ class LightBoard {
         // Getter and setter for lightStates array
         int getLightState(int row, int column);
 
-        int compareLightColumnState(int statesToCompare[3], int column);
+        bool compareLightColumnState(int statesToCompare[3], int column);
 
         void setLightState(int row, int column, int state); 
 
-        // Reset light states
-        void resetLightStates();
+        // Reset light states to 0
+        void resetAllLightStates();
+
+        void resetLightRowStates(int row);
+
+        // Set light states to 1
+        void setAllLightStates();
+
+        void setLightRowStates(int row);
 
     private:
         int lightColumnControlPins[3] = {10, 9, 8}; // 3:8 Decoder
