@@ -1,6 +1,10 @@
 #include <LightBoard.h>
 
 LightBoard::LightBoard() {
+    setControlPinModes();
+}
+
+void LightBoard::setControlPinModes() {
     for(int i = 0; i < 3; i++) {
         pinMode(lightRowControlPins[i], OUTPUT);
         pinMode(lightColumnControlPins[i], OUTPUT);
@@ -111,15 +115,37 @@ void LightBoard::shiftLightStates(int rowsToExclude[3]) {
     }
 }
 
-
-
-bool LightBoard::compareLightColumnState(int statesToCompare[], int column) {
-    for(int i = 0; i < 3; i++) {
-        if(statesToCompare[i] && lightStates[i][column]){
-            return true;
+void LightBoard::runWinSequence() {
+    resetAllLightStates();
+    
+    // Flash the lights in a pattern
+    unsigned long startTime = millis();
+    while(millis() - startTime < 1000) {
+        for(int col = 0; col < 8; col++) {
+            for(int row = 0; row < 3; row++) {
+                powerLED(row, col);
+                delay(5);
+            }
+        }
+        for(int col = 7; col >= 0; col--) {
+            for(int row = 2; row >= 0; row--) {
+                powerLED(row, col);
+            }
         }
     }
-    return false;
+
+    // Display a W using the lights
+    unsigned long secondStartTime = millis();
+    while(millis() - secondStartTime < 2000) {
+        powerLED(2, 0);
+        powerLED(1, 1);
+        powerLED(0, 2);
+        powerLED(1, 3);
+        powerLED(1, 4);
+        powerLED(0, 5);
+        powerLED(1, 6);
+        powerLED(2, 7);
+    }
 }
 
 int LightBoard::getLightState(int row, int column) {
